@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14213D">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="1등급 순공">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<title>1등급 순공 기록</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#14213D; --navy2:#1F3160; --gold:#C9A227; --gold-soft:#F6EED3;
+    --bg:#F5F6F9; --card:#FFFFFF; --ink:#18202E; --muted:#6B7385; --line:#E4E7EE;
+    --ok:#2E9E6B; --warn:#D9822B; --danger:#C94B4B;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR",system-ui,-apple-system,sans-serif;font-size:15px;line-height:1.5}
+  body{padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+  .wrap{max-width:560px;margin:0 auto;padding:0 14px 96px}
+  header{background:var(--navy);color:#fff;padding:18px 16px 16px;margin:0 -14px 14px;border-bottom:3px solid var(--gold)}
+  header .brand{display:flex;align-items:center;gap:10px}
+  .logo{width:40px;height:40px;display:block;object-fit:contain}
+  header h1{font-size:17px;margin:0;font-weight:700;letter-spacing:-.2px}
+  header .who{font-size:13px;color:#C9D1E4;margin-top:2px}
+  .tabs{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:env(safe-area-inset-bottom);z-index:20}
+  .tabs .in{display:flex;max-width:560px;width:100%}
+  .tabs button{flex:1;border:0;background:none;padding:10px 0 12px;font:inherit;font-size:13px;color:var(--muted);cursor:pointer}
+  .tabs button b{display:block;font-size:19px;line-height:1.2;margin-bottom:2px}
+  .tabs button.on{color:var(--navy);font-weight:700}
+  .tabs button.on b{color:var(--gold)}
+  .card{background:var(--card);border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 1px 2px rgba(20,33,61,.06)}
+  .card h2{font-size:15px;margin:0 0 12px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+  .card h2 small{font-weight:400;color:var(--muted);font-size:12px}
+  .muted{color:var(--muted)} .small{font-size:12.5px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:8px 14px;font:inherit;font-size:14px;cursor:pointer;color:var(--ink)}
+  .chip.on{border-color:var(--navy);background:var(--navy);color:#fff}
+  .chip:disabled{opacity:.45;cursor:default}
+  .timer{font-variant-numeric:tabular-nums;font-size:52px;font-weight:900;text-align:center;letter-spacing:1px;margin:14px 0 4px;color:var(--navy)}
+  .timer.run{color:var(--navy)}
+  .timer-sub{text-align:center;color:var(--muted);font-size:13px;min-height:20px}
+  .row{display:flex;gap:8px}
+  .btn{flex:1;border:0;border-radius:12px;padding:13px 10px;font:inherit;font-weight:700;font-size:15px;cursor:pointer}
+  .btn.primary{background:var(--navy);color:#fff}
+  .btn.gold{background:var(--gold);color:var(--navy)}
+  .btn.ghost{background:#EEF0F5;color:var(--ink)}
+  .btn.danger{background:#FBECEC;color:var(--danger)}
+  .btn:disabled{opacity:.4;cursor:default}
+  .btn.sm{flex:0 0 auto;padding:8px 12px;font-size:13px;border-radius:10px}
+  .acad{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--gold-soft);border:1px solid #E8D9A6;border-radius:12px;padding:12px 14px}
+  .acad .t{font-weight:700;color:var(--navy)}
+  .acad .d{font-size:12.5px;color:#6E5B1E}
+  .goal{margin-top:6px}
+  .goal .lab{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:5px}
+  .goal .lab b{font-weight:700}
+  .bar{height:10px;background:#EEF0F5;border-radius:99px;overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:99px;background:var(--navy);transition:width .4s}
+  .bar.sci i{background:#2BB3A3}
+  .goal + .goal{margin-top:14px}
+  .list{list-style:none;margin:0;padding:0}
+  .list li{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+  .list li:first-child{border-top:0}
+  .dot{width:10px;height:10px;border-radius:50%;flex:0 0 10px}
+  .list .nm{flex:1}
+  .list .mn{font-variant-numeric:tabular-nums;font-weight:700}
+  .x{border:0;background:none;color:#A0A6B4;font-size:18px;cursor:pointer;padding:0 4px}
+  .empty{color:var(--muted);text-align:center;padding:14px 0;font-size:13.5px}
+  .weeknav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+  .weeknav button{border:0;background:#fff;border-radius:10px;width:40px;height:38px;font-size:18px;cursor:pointer;box-shadow:0 1px 2px rgba(20,33,61,.06)}
+  .weeknav .w{text-align:center;font-weight:700}
+  .weeknav .w small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+  .days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;align-items:end;height:150px;margin:6px 0 4px}
+  .day{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:4px}
+  .stack{width:70%;max-width:30px;display:flex;flex-direction:column-reverse;border-radius:6px;overflow:hidden;background:#EEF0F5;min-height:3px}
+  .stack span{display:block}
+  .day .v{font-size:11px;font-variant-numeric:tabular-nums;color:var(--muted);height:15px}
+  .dlabels{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center;font-size:12px;color:var(--muted)}
+  .dlabels .today{color:var(--navy);font-weight:700}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:12px;font-size:12px;color:var(--muted)}
+  .legend span{display:flex;align-items:center;gap:5px}
+  table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+  th,td{padding:7px 4px;text-align:right;border-bottom:1px solid var(--line)}
+  th:first-child,td:first-child{text-align:left}
+  th{color:var(--muted);font-weight:500;font-size:12px}
+  tfoot td{font-weight:700;border-bottom:0;border-top:2px solid var(--navy)}
+  .tbl{overflow-x:auto}
+  label.f{display:block;font-size:13px;color:var(--muted);margin:12px 0 5px}
+  input,select,textarea{width:100%;font:inherit;font-size:15px;padding:11px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--navy)}
+  textarea{min-height:120px;font-size:12.5px;font-family:ui-monospace,Menlo,monospace}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .report{white-space:pre-wrap;background:#F7F8FB;border:1px dashed #CFD4DF;border-radius:10px;padding:12px;font-size:13px;line-height:1.6}
+  .toast{position:fixed;left:50%;bottom:86px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;padding:10px 16px;border-radius:999px;font-size:13.5px;opacity:0;transition:.25s;pointer-events:none;z-index:50;white-space:nowrap}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .modal{position:fixed;inset:0;background:rgba(15,22,40,.45);display:none;align-items:flex-end;justify-content:center;z-index:40}
+  .modal.show{display:flex}
+  .sheet{background:#fff;width:100%;max-width:560px;border-radius:18px 18px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom))}
+  .sheet h3{margin:0 0 6px;font-size:16px}
+  .banner{background:#FFF4E5;color:#8A4B0F;border-radius:10px;padding:10px 12px;font-size:13px;margin-bottom:12px}
+  .hidden{display:none!important}
+  .stepper{display:flex;align-items:center;gap:8px}
+  .stepper button{width:44px;height:44px;border-radius:10px;border:0;background:#EEF0F5;font-size:20px;cursor:pointer}
+  .stepper input{text-align:center;font-weight:700}
+  .welcome p{margin:4px 0 0}
+  .guide{margin-top:14px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .guide .gh{background:#F3F4F8;padding:10px 12px;font-weight:700;font-size:13.5px}
+  .guide table{font-size:13px}
+  .guide th,.guide td{padding:8px 10px;text-align:center}
+  .guide th:first-child,.guide td:first-child{text-align:left}
+  .guide tr.me td{background:var(--gold-soft);font-weight:700}
+  .guide .gn{padding:9px 12px;font-size:12px;color:var(--muted);border-top:1px solid var(--line);line-height:1.6}
+  .daypick{display:flex;gap:6px}
+  .daypick .chip{flex:1;padding:8px 0;text-align:center;border-radius:10px}
+  .prompt{background:var(--navy);color:#fff;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 2px 6px rgba(20,33,61,.18)}
+  .prompt .pt{font-weight:700;font-size:15.5px}
+  .prompt .pd{font-size:13px;color:#C9D1E4;margin:4px 0 12px}
+  .prompt .btn.ghost{background:rgba(255,255,255,.12);color:#fff}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <img class="logo" alt="1등급 과학전문학원 로고" src="data:image/png;base64,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">
+      <div>
+        <h1>1등급 순공 기록</h1>
+        <div class="who" id="who">1등급 과학전문학원</div>
+      </div>
+    </div>
+  </header>
+
+  <div id="storageBanner" class="banner hidden">이 브라우저에서는 기록을 저장할 수 없어요. 창을 닫으면 기록이 사라지니, 마지막에 ‘설정 → 백업 코드 복사’를 해 두세요.</div>
+
+  <!-- 입장 코드 -->
+  <section id="gate" class="hidden">
+    <div class="card welcome">
+      <h2 id="gateTitle">학원생 입장 코드</h2>
+      <p class="muted small" id="gateMsg">1등급 과학전문학원 학생만 사용할 수 있어요. 학원에서 받은 입장 코드를 입력해 주세요.</p>
+      <label class="f" for="gCode">입장 코드</label>
+      <input id="gCode" placeholder="예: 1G-AB12C" autocapitalize="characters" autocomplete="off" maxlength="12">
+      <div style="margin-top:14px"><button class="btn primary" style="width:100%" id="gBtn">확인</button></div>
+      <p class="muted small" style="margin:12px 0 0">코드 문의: 1등급 과학전문학원 053-611-9111</p>
+    </div>
+  </section>
+
+  <!-- 처음 설정 -->
+  <section id="setup" class="hidden">
+    <div class="card welcome">
+      <h2>처음 오셨네요!</h2>
+      <p class="muted small">이름과 학년만 입력하면 바로 시작할 수 있어요. 기록은 이 휴대폰에만 저장됩니다.</p>
+      <label class="f" for="sName">이름</label>
+      <input id="sName" placeholder="예: 김민준" maxlength="20">
+      <div class="grid2">
+        <div>
+          <label class="f" for="sGrade">학년</label>
+          <select id="sGrade">
+            <option value="ms">중학생</option>
+            <option value="m3">중3 (예비 고1)</option>
+            <option value="h1" selected>고1</option>
+            <option value="h2">고2</option>
+            <option value="h3">고3</option>
+          </select>
+        </div>
+        <div>
+          <label class="f" for="sClass">학원 수업</label>
+          <select id="sClass">
+            <option value="1">주 1회 (학원 순공 90분)</option>
+            <option value="2">주 2회 (학원 순공 50분×2)</option>
+            <option value="3">주 3회 (학원 순공 50분×3)</option>
+          </select>
+        </div>
+      </div>
+      <label class="f">학원 오는 요일 <span class="small">(그날 학원 순공 기록 알림이 떠요)</span></label>
+      <div class="daypick" id="sDays"></div>
+      <div style="margin-top:16px"><button class="btn primary" style="width:100%" id="startBtn">시작하기</button></div>
+    </div>
+  </section>
+
+  <!-- 오늘 -->
+  <section id="tab-today" class="hidden">
+    <div id="acadPrompt"></div>
+    <div class="card">
+      <h2>스톱워치 <small id="todayLabel"></small></h2>
+      <div class="chips" id="subjChips"></div>
+      <div class="timer" id="timer">00:00:00</div>
+      <div class="timer-sub" id="timerSub">과목을 고르고 시작을 누르세요</div>
+      <div class="row" style="margin-top:12px">
+        <button class="btn primary" id="btnStart">시작</button>
+        <button class="btn ghost hidden" id="btnPause">일시정지</button>
+        <button class="btn gold hidden" id="btnSave">끝내고 저장</button>
+      </div>
+      <div class="row hidden" id="discardRow" style="margin-top:8px"><button class="btn danger" id="btnDiscard">이번 기록 버리기</button></div>
+    </div>
+
+    <div class="card">
+      <div class="acad">
+        <div>
+          <div class="t">학원 순공 기록하기</div>
+          <div class="d" id="acadDesc">학원 오는 날, 과학 순공 90분이 채워져요</div>
+        </div>
+        <button class="btn sm primary" id="btnAcad">+ 기록</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>이번 주 목표 <small id="weekRange0"></small></h2>
+      <div class="goal">
+        <div class="lab"><span>전체 순공</span><span><b id="gTot">0</b> / <span id="gTotGoal">0</span>시간</span></div>
+        <div class="bar"><i id="gTotBar" style="width:0"></i></div>
+      </div>
+      <div class="goal">
+        <div class="lab"><span>과학 순공 <span class="muted small">(집 + 학원)</span></span><span><b id="gSci">0</b> / <span id="gSciGoal">0</span>시간</span></div>
+        <div class="bar sci"><i id="gSciBar" style="width:0"></i></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>오늘 기록 <small>합계 <b id="todayTotal">0분</b></small></h2>
+      <ul class="list" id="todayList"></ul>
+      <button class="btn ghost" style="width:100%;margin-top:10px" id="btnManual">+ 직접 입력하기 (깜빡했을 때)</button>
+    </div>
+  </section>
+
+  <!-- 이번 주 -->
+  <section id="tab-week" class="hidden">
+    <div class="weeknav">
+      <button id="prevW" aria-label="이전 주">‹</button>
+      <div class="w"><span id="weekTitle"></span><small id="weekRange"></small></div>
+      <button id="nextW" aria-label="다음 주">›</button>
+    </div>
+    <div class="card">
+      <h2>요일별 순공 <small id="weekSum"></small></h2>
+      <div class="days" id="dayBars"></div>
+      <div class="dlabels" id="dayLabels"></div>
+      <div class="legend" id="legend"></div>
+    </div>
+    <div class="card">
+      <h2>목표 달성</h2>
+      <div class="goal">
+        <div class="lab"><span>전체 순공</span><span><b id="wTot">0</b> / <span id="wTotGoal">0</span>시간 · <b id="wTotPct">0%</b></span></div>
+        <div class="bar"><i id="wTotBar" style="width:0"></i></div>
+      </div>
+      <div class="goal">
+        <div class="lab"><span>과학 순공</span><span><b id="wSci">0</b> / <span id="wSciGoal">0</span>시간 · <b id="wSciPct">0%</b></span></div>
+        <div class="bar sci"><i id="wSciBar" style="width:0"></i></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>과목별 합계 <small>단위: 시간</small></h2>
+      <div class="tbl"><table id="weekTable"></table></div>
+    </div>
+    <div class="card">
+      <h2>원장님께 리포트 보내기</h2>
+      <div class="report" id="reportText"></div>
+      <button class="btn gold" style="width:100%;margin-top:10px" id="btnCopyReport">리포트 복사 → 카톡에 붙여넣기</button>
+    </div>
+  </section>
+
+  <!-- 설정 -->
+  <section id="tab-set" class="hidden">
+    <div class="card">
+      <h2>내 정보와 목표</h2>
+      <label class="f" for="pName">이름</label>
+      <input id="pName" maxlength="20">
+      <div class="grid2">
+        <div>
+          <label class="f" for="pGrade">학년</label>
+          <select id="pGrade">
+            <option value="ms">중학생</option>
+            <option value="m3">중3 (예비 고1)</option>
+            <option value="h1">고1</option>
+            <option value="h2">고2</option>
+            <option value="h3">고3</option>
+          </select>
+        </div>
+        <div>
+          <label class="f" for="pClass">학원 수업</label>
+          <select id="pClass">
+            <option value="1">주 1회 (학원 순공 90분)</option>
+            <option value="2">주 2회 (학원 순공 50분×2)</option>
+            <option value="3">주 3회 (학원 순공 50분×3)</option>
+          </select>
+        </div>
+      </div>
+      <label class="f">학원 오는 요일 <span class="small">(그날 학원 순공 기록 알림이 떠요)</span></label>
+      <div class="daypick" id="pDays"></div>
+      <div class="grid2">
+        <div>
+          <label class="f" for="pGoal">주간 순공 목표 (시간)</label>
+          <input id="pGoal" type="number" min="1" max="100" step="0.5" inputmode="decimal">
+        </div>
+        <div>
+          <label class="f" for="pSci">과학 주간 목표 (시간)</label>
+          <input id="pSci" type="number" min="0.5" max="40" step="0.5" inputmode="decimal">
+        </div>
+      </div>
+      <p class="muted small" style="margin:10px 0 0">학년을 바꾸면 추천 목표로 바뀌어요. 처음엔 지금 실제 순공시간보다 1시간 정도만 높게 잡는 걸 추천해요.</p>
+      <button class="btn primary" style="width:100%;margin-top:14px" id="btnSaveProfile">저장</button>
+    </div>
+    <div class="card">
+      <h2>학년별 순공시간 가이드</h2>
+      <div class="guide" style="margin-top:0">
+        <div class="gh">일주일 기준 · 목표를 정할 때 참고하세요</div>
+        <table id="guideTable">
+          <thead><tr><th>학년</th><th>전체 순공<br><span class="small">중위권 → 상위권</span></th><th>과학 순공</th></tr></thead>
+          <tbody>
+            <tr data-g="ms"><td>중학생</td><td>12 → 18시간</td><td>2~3시간</td></tr>
+            <tr data-g="m3"><td>중3 (예비 고1)</td><td>15 → 25시간</td><td>2.5~3시간</td></tr>
+            <tr data-g="h1"><td>고1</td><td>20 → 30시간</td><td>3.5~4시간</td></tr>
+            <tr data-g="h2"><td>고2</td><td>25 → 35시간</td><td>4.5~5시간</td></tr>
+            <tr data-g="h3"><td>고3</td><td>30 → 45~55시간</td><td>4.5~10시간</td></tr>
+          </tbody>
+        </table>
+        <div class="gn">· 시험 3주 전에는 위 시간보다 하루 1~2시간 더<br>· 방학에는 전체 순공 하루 5~6시간(중위권) ~ 7~9시간(상위권)<br>· 고3 과학은 수시 위주 4.5~5시간, 정시(과탐 2과목) 8~10시간<br>· 과학 순공에는 학원 순공시간(주 1회 1.5시간)이 포함돼요</div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>백업과 복원</h2>
+      <p class="muted small" style="margin:0 0 10px">휴대폰을 바꾸거나 브라우저 기록을 지우면 순공 기록이 사라질 수 있어요. 가끔 백업 코드를 복사해서 카톡 ‘나와의 채팅’에 저장해 두세요.</p>
+      <button class="btn ghost" style="width:100%" id="btnBackup">백업 코드 복사</button>
+      <label class="f" for="restoreText">복원하기: 백업 코드를 붙여넣으세요</label>
+      <textarea id="restoreText" placeholder="SG1:..."></textarea>
+      <button class="btn ghost" style="width:100%;margin-top:8px" id="btnRestore">복원</button>
+    </div>
+    <div class="card">
+      <h2>기록 전체 삭제</h2>
+      <button class="btn danger" style="width:100%" id="btnReset">모든 기록 지우기</button>
+    </div>
+  </section>
+</div>
+
+<nav class="tabs hidden" id="tabs"><div class="in">
+  <button data-tab="today" class="on"><b>⏱</b>오늘</button>
+  <button data-tab="week"><b>▦</b>주간</button>
+  <button data-tab="set"><b>⚙</b>설정</button>
+</div></nav>
+
+<!-- 모달 -->
+<div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+  var KEY = "sungong_v1";
+  var SUBJ = [
+    {k:"kor",  n:"국어",          c:"#E07A7A"},
+    {k:"math", n:"수학",          c:"#5C8DF6"},
+    {k:"eng",  n:"영어",          c:"#F0A848"},
+    {k:"sci",  n:"과학(집)",      c:"#2BB3A3"},
+    {k:"acad", n:"과학(학원 순공)", c:"#14213D"},
+    {k:"etc",  n:"사회·기타",     c:"#9A8FCB"}
+  ];
+  var TIMER_SUBJ = ["kor","math","eng","sci","etc"];
+  var REC = { // 추천 목표 (중위권 기준)
+    ms:{goal:12, sci:2, n:"중학생"},
+    m3:{goal:15, sci:2.5, n:"중3(예비 고1)"},
+    h1:{goal:20, sci:3.5, n:"고1"},
+    h2:{goal:25, sci:4.5, n:"고2"},
+    h3:{goal:30, sci:4.5, n:"고3"}
+  };
+  var ACAD_MIN = {"1":90, "2":50, "3":50};
+  var DOW = ["월","화","수","목","금","토","일"];
+  function dayPicker(boxId, arr){
+    var box=document.getElementById(boxId); box.innerHTML="";
+    DOW.forEach(function(d,i){
+      var b=document.createElement("button"); b.type="button"; b.className="chip"+(arr.indexOf(i)>=0?" on":""); b.textContent=d;
+      b.onclick=function(){ var k=arr.indexOf(i); if(k>=0) arr.splice(k,1); else arr.push(i); arr.sort(); b.classList.toggle("on", arr.indexOf(i)>=0); };
+      box.appendChild(b);
+    });
+  }
+  var setupDays=[], profDays=[];
+  function dowIdx(d){ return (d.getDay()+6)%7; }
+  var ACCESS = /*ACCESS*/{"salt": "1G-sungong-0a8dd2fb60e0", "h": ["0e5a2752bb77bb815aa7ae3f9e7967914856c39c756c82d63dec9cd626503147", "bb16714420cafc733291e3d26b859079019b9cd0412e0ff506b1e58ff31ae291", "507b0f3b1233fc84d3b4a1c61a0903500a13cff03ab50be86d9ad43c3a20196b", "039370f4ab7857cc4ff48eff0124473f5c1a421096735ceb3f81d5c9e5daaaec", "50d63e81b2211c1de42a58ed104168a819f0c19b9b5ae2cb40bd71523ee97d9f", "39f985fc1815a89c112be456baea8fa2a30a37cb6cd73ebb12ff0cfffadf3c66", "73d0cde0756d59b0818c83286e07cbb508344149a1eaaea5738ec39779881eef", "2895a2b97ae37abd45bb6f9508cd1d36429717f179e9b6aec1877a85c95997bd", "4ec5dff58047f832ed535f69d47e7abc1c934fee3157b66dd3f0a40ee87029fb", "9aeedf97448218ffd06ce9f646727781356259a16eb0e33d050fe1490d0ee32d", "ecaeae47330b71b126f3c8913f4ffb9eb0955f0ccf582b53280980ea86ce2d31", "e82ad9c79e2989c573b88bd9d9ba33ae5a660db05f9a0d6cecad628288d2d838", "b17cbdc5c835fe5584c0d19487831905874abfa450008d82271235b5349244a8", "aea45a3858a2e0fe2ea97a99b620ecfb1f9a3d6650511972a294122a40f263d2", "bf2aa9d04601e8b42f2cb40a5430c48d175a7dd9d2065b20b987a3666acf0edc", "6dea777066cb49699d294ac378c70c69712520bd7bebbdfb3abc066a2936a9da", "2e967133b8d206ffcfb88a174234ff6f44ec1c799278574d553b18a03e7c9096", "565becc9042a75a6901c734deee89d424d68b8aff606c524b77635e21e366454", "ef388c97c01be981397048f04ed4e5e105c6a6e93ea15a10e13fbf28011a7b65", "597e3f0047bec13a4ee580fd478797c865cbcd86279e31bf419197f7892fe698", "f1f509a2b42c86c6b9b95e84add7b46e35babd569a21fa085cb6c6ccdb3f9be5", "b7b2b6b8c45fe435fa35b4bfbd1e30f544c32c35bc7cd79837d7a69046cf88ca", "0d513ff13dfe38fc107eec08223ab503c6e6a40bc568291fcefcf8e1261125e4", "0f234cd88d29ef4d04cb92aa0245d29397fbc6e512adb92b0a9b87779a260f22", "c6dd7a6f38447ffb4ef533dda4367590114a7e3bd1988b01157cfeef69520ca2", "199440322f44c52b654c6983aafa87710d35da23a1800888097d39ca3d6e06be", "c72746a0d211fb8ca12a9747178f435b9b5e64e0dc53775b44d16aaea2bbfdf5", "c627ead786cb9a0e6be1a4d7c5e9f8e48af866723024c3543d53b58c516ec44d", "d1699bf59d45c310a2e7148e965fb7a4a059e2cb88c21b52de0b0d70d6d3ee3b", "fbb2e382d4b9215d6a1fa48ce2ad0ea02634dd21390135a874a50b201dddaccf", "bb79985744344a66fd932434cc440b145f80f697a7a43d235e027740669f24f3", "714faa63bc0fd649a54c5f4d74657552f10951eb72768a5aa3104f62b06c51f4", "db970e5fecfce7842acd8318bd7190f0fa378db378729e9038c2286abe08a3cf", "695761c4d1435aa000546f43dc3abb939159d58332377fd40f4b666aff74d63e", "039ad7b87c1f04d1cc0e124b9680ddc8374400f871012d44c00961d83f5f8e9c", "f9c5fcb75d8ef371c846acee5ac05019333c47fc4d6358010de40f2629042cbf", "faf987bf6f2066fe523445dee283b8be5429783fa3fb188ecbc9f995c77cd85e", "a4a68ad82050c718c9d57b1f2da3b49d9e8c973e0bc6cbb3bd2a8607670641b8", "cc6a728e29a233ca0d5f3c21683942d65a3ca9855d09edae5ccb0b0993a19553", "90248afb133339531ba54bd0bb1bd57c3922bb63d1489f8de31de5e23f295f9e", "3f5d27e7a99eb93761ea08f2b6a4eae0004e05c940fa345f56d37ab2a00e5afe", "6eb44259c655e3282252cbc988339c7103e5d6ee48c2bb16f456a4e2a198ee60", "e267d0e3838d156cf92cecd9625bc4bb82ce5e04bef8f38a7e111578ec8e290e", "357496d9019c8b238036e21580a3bbc71a9cdace14d3eb4606062ec1cae0a7bb", "019b403e9a870d5420f25a40deaca87437c5d710a215425d1eff5febd60da82a", "86e2ac7066551bb4ad8ae3053d2b1853f1c06a7ae607927b515229ee49e0d002", "e1c6bf8633ab0fc2fc410d47ab42776e97a467106a238674174c580bfb0ca095", "587c80b99c0a01b7d076fd96c68e6fe266b2e6c49c4cb81a98de99da8b5ae1d1", "1ef6f3ceb98e6c994b02492fd4fc03ff6215f4f954626c31257ec0e2d8197bd0", "61e968f9ee5b8fc7339bcb4905ade8a5d38ec5f2bd2185b9a25d798b460b55f5", "9ba8052a35f05f5794b320c9a154b77a03ec6759dede7c8ad67ec51934da206f", "966f7139edba5798733151114041bb8935b304e74354f7ccd6e3fae3d40464d7", "de97c7767108e6cb2d5ccf0a05db7d6e72e9af5da6327f5262d816a6c4762f91", "7d03a35476630aebab4686ee00b74538b7fa7340bc40afd6d45812546fcfef8d", "0597ceb4788cd0e86f7e95855e098390977dc418883ff0c5c0c98a3548ea3a7d", "78415370f556dd5488912dcad6c609fda23d996f1e26f9727082495ce1a517d1", "ce253994183848849b65830599db0631648a6145d0a1991da00a967c7ac7b7d0", "61c30608f906322447c1153b55dcb4a39f85cddb7e9c41269040b653cee77ce6", "92861e170f39f504bd368912084f20aedd65942c86ce9a65b8b496bc7a47afc1", "76e2c6996fb53321b826afdfce3725fcbad899736e42733a92e04b3ae44d4e29", "4f1976ecfa592686a9e32c9f54c15c2426651d2e247ad78d47648f1a7fb82231", "541003ac30dc8e63b0899411560e2d781f40fd5bbf2a4283a7488e97910284c9", "6b81c68d257c7cc62a4d4c61df2aab18c7e4cba31541f3fe70bee371c9c5ba2b", "2bb2f9fa76af033e43fdaa4d20b5ea11a8a622e6b543161a30128288e0f80a13", "a0e6a243a1ca30293baeea19b70969d0eb5ea9b0f45a74c6ca45f809e2ea0388", "8196ee95c3ba562724e4e40ca62a3c42bb635e3b09086eeb8f418fdfa6975307", "596da4e80c396903bc3120e47b61218257d22aaf0a3a0852a1da28ab3da9df36", "3e7bc199c4c76bbb180d8e73e0fb6317acc0f42c6f33c6bee098751c0ca7e140", "c655d0a85e7c9b14d1c841c0f933f800c5db7d3afd8e7cc6f2ba9698972afd53", "62c4d2444baa859654cc81aba9dae8dd31d2b677e97aceaf23ac7f359897d183", "9aca9862296aec83d03b6124240ae4419e780fb934d6fd7b27c19675e5025c7b", "d3a74bf4254d56922b62459d789bfb2a0e17259e2cab219018fbcc22bc77f3fb", "e8fc124a301c5d039c4ed782d78e1c2695e2376619deca7b4837b0fa43d798fa", "d65303d3c2a20023576993b59e8d674a786ffe7667bd9054bbe8f489712aee94", "c0aa2769cee0f8bfab34d538e2a04b51c020f377cf9a41eddf64163d8173ceca", "b3749c2da1ae27385f026001330db91142373e6f4997ae2036051f5761c68216", "e52c75331de4815faac0f1ec36c24007c61ecc162ee15894303bb4103af123bd", "c4338c91b42e985754eaa0b2c874cd3f8f7413084d156ef8c79be77694e8da64", "77dd58724e485234e8a4f4390b0461c36d702493650e0674e213d4a1f697e1a4", "89ec230773c87e5258572fe5adc61b26b7c20033386222920df1042013163eab", "7e48495acb61b6139dbce9bcb6b6b91645329f2b6972f00ac53224e444e13f71", "b13334db45d21886f536cf5fe635f0042427b6d4deadff566ca6dceaf9048244", "914563e4f3152252b255baa6a5cf4934829f438299fc409a908713352fbe1995", "06ced35652e59b0a71b78eeeb1a5fd1f2f11862e031dd6a77b540d94c4e78e07", "08cf9f77cd28a66c197e46b76c40a0f2f981895cd1983619afde641d401a1583", "6e238a8ea23b78b20bc0ba1f0e6efc20c1af9e33039f688d51ffbc80ecc0b548", "2a5d4740776b24d1e336128d334908e5a756994891d33ac5428a5e6ff51ec9bb", "8a64054d1927c20a161f3efce45bc79821bbaeafb34bf2bbaf49d46a8978841e", "45d20ead75e74ac0806095586a50f01e15bc0853d10c2619efaed47e4e571441", "c0936de0fcc2d5d8070527ccddc5c8f8656b322b44a650b38dfbf5464c08e2ec", "1856ecb402f3c1f22e17b4bca5920c6d991b217e31b2ece3ac839104bb4948b9", "1736ee23de557e4d7d89bd611ffd03381b00a8f5486091bd9a5f5299d4d185e4", "56b7280bd578301d03847b84e394129f9bf82e36b5b49e97d0258324ae9a8e87", "b90750690a55bc953ce101ff024e27c23d3c2b7d6ed0f7cbc604f398344fdd07", "53d15f0e0dece456cd72fa4fa9c850038ea37f502d16c68d130a66f5c3e86018", "4665055aa0e95bb4b77efeaea96dc453df51d1b4be84913616c49ad04f00fe3a", "be4cc73b77265289a0141f48dab0b5829d25a1bc0163bdf5c184ce6e83ba5541", "9c3bef2f3d71882956942c48a5bc3618328247300d9fe05c45492eeba37a1fe3", "74b3f7429fcb2811841210d09c13b1a72abb41d5a1fbf3fe8a7a5e995feb3d49", "c2094a156285cf4159c9aeda81417111318dbb36daf19b58fbeb84c32c04a494"]}/*/ACCESS*/;
+
+  // ---------- 저장소 ----------
+  var canStore = true;
+  function load(){
+    try { var s = localStorage.getItem(KEY); return s ? JSON.parse(s) : null; }
+    catch(e){ canStore = false; return null; }
+  }
+  function save(){
+    try { localStorage.setItem(KEY, JSON.stringify(S)); }
+    catch(e){ canStore = false; showBanner(); }
+  }
+  function showBanner(){ document.getElementById("storageBanner").classList.toggle("hidden", canStore); }
+
+  var S = load() || {profile:null, sessions:[], running:null};
+  if(!Array.isArray(S.sessions)) S.sessions = [];
+
+  // ---------- 날짜 ----------
+  function pad(n){ return (n<10?"0":"")+n; }
+  function ymd(d){ return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+  function parseYmd(s){ var p=s.split("-"); return new Date(+p[0], +p[1]-1, +p[2]); }
+  function addDays(d,n){ var x=new Date(d); x.setDate(x.getDate()+n); return x; }
+  function monday(d){ var x=new Date(d.getFullYear(), d.getMonth(), d.getDate()); var off=(x.getDay()+6)%7; return addDays(x,-off); }
+  function md(d){ return (d.getMonth()+1)+"/"+d.getDate(); }
+  function today(){ return ymd(new Date()); }
+
+  // ---------- 포맷 ----------
+  function hm(min){ min=Math.round(min); var h=Math.floor(min/60), m=min%60; if(!h) return m+"분"; return h+"시간"+(m? " "+m+"분":""); }
+  function hr(min){ var v=Math.round(min/6)/10; return (v%1===0? v.toFixed(0): v.toFixed(1)); }
+  function clock(ms){ var s=Math.floor(ms/1000), h=Math.floor(s/3600), m=Math.floor(s%3600/60); s=s%60; return pad(h)+":"+pad(m)+":"+pad(s); }
+  function subj(k){ for(var i=0;i<SUBJ.length;i++) if(SUBJ[i].k===k) return SUBJ[i]; return SUBJ[5]; }
+  function esc(s){ return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
+
+  // ---------- 집계 ----------
+  function weekData(mon){
+    var days=[], start=ymd(mon), end=ymd(addDays(mon,6));
+    for(var i=0;i<7;i++){ days.push({date:ymd(addDays(mon,i)), by:{}, tot:0}); }
+    var by={}, tot=0;
+    S.sessions.forEach(function(s){
+      if(s.date<start || s.date>end) return;
+      var idx=Math.round((parseYmd(s.date)-mon)/86400000);
+      if(idx<0||idx>6) return;
+      var d=days[idx]; d.by[s.subj]=(d.by[s.subj]||0)+s.min; d.tot+=s.min;
+      by[s.subj]=(by[s.subj]||0)+s.min; tot+=s.min;
+    });
+    return {days:days, by:by, tot:tot, sci:(by.sci||0)+(by.acad||0), mon:mon};
+  }
+
+  // ---------- UI 공통 ----------
+  var $ = function(id){ return document.getElementById(id); };
+  var toastT;
+  function toast(msg){ var t=$("toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(toastT); toastT=setTimeout(function(){t.classList.remove("show");},2000); }
+  function openModal(html){ $("sheet").innerHTML=html; $("modal").classList.add("show"); }
+  function closeModal(){ $("modal").classList.remove("show"); }
+  $("modal").addEventListener("click", function(e){ if(e.target.id==="modal") closeModal(); });
+  function copyText(text, okMsg){
+    function fallback(){
+      openModal('<h3>아래 내용을 길게 눌러 복사하세요</h3><textarea id="cpTa" readonly style="min-height:200px"></textarea><div class="row" style="margin-top:10px"><button class="btn primary" id="cpClose">닫기</button></div>');
+      var ta=$("cpTa"); ta.value=text; ta.focus(); ta.select();
+      $("cpClose").onclick=closeModal;
+    }
+    try{
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(function(){ toast(okMsg); }, fallback);
+      } else fallback();
+    }catch(e){ fallback(); }
+  }
+
+  // ---------- 화면 전환 ----------
+  var curTab="today", viewMon=monday(new Date());
+  function show(tab){
+    curTab=tab;
+    ["today","week","set"].forEach(function(t){ $("tab-"+t).classList.toggle("hidden", t!==tab); });
+    Array.prototype.forEach.call(document.querySelectorAll(".tabs button"), function(b){ b.classList.toggle("on", b.dataset.tab===tab); });
+    if(tab==="week") renderWeek();
+    if(tab==="set") renderSet();
+    if(tab==="today") renderToday();
+    window.scrollTo(0,0);
+  }
+  Array.prototype.forEach.call(document.querySelectorAll(".tabs button"), function(b){ b.onclick=function(){ show(b.dataset.tab); }; });
+
+  function normCode(v){
+    v=String(v||"").toUpperCase().replace(/[^A-Z0-9]/g,"");
+    if(v.indexOf("1G")===0) v=v.slice(2);
+    return "1G-"+v;
+  }
+  function sha(text){
+    try{
+      return crypto.subtle.digest("SHA-256", new TextEncoder().encode(text)).then(function(buf){
+        return Array.prototype.map.call(new Uint8Array(buf), function(b){ return ("0"+b.toString(16)).slice(-2); }).join("");
+      });
+    }catch(e){ return Promise.reject(e); }
+  }
+  function codeOk(code){ return sha(ACCESS.salt+code).then(function(h){ return ACCESS.h.indexOf(h)>=0; }); }
+  function hideAll(){
+    ["gate","setup","tab-today","tab-week","tab-set"].forEach(function(t){ $(t).classList.add("hidden"); });
+    $("tabs").classList.add("hidden");
+  }
+  function showGate(blocked){
+    hideAll(); $("gate").classList.remove("hidden");
+    $("gateTitle").textContent = blocked ? "사용할 수 없는 코드예요" : "학원생 입장 코드";
+    $("gateMsg").textContent = blocked
+      ? "이 입장 코드는 더 이상 사용할 수 없어요. 계속 사용하려면 학원에 문의해 새 코드를 받아 주세요."
+      : "1등급 과학전문학원 학생만 사용할 수 있어요. 학원에서 받은 입장 코드를 입력해 주세요.";
+    $("gCode").value="";
+  }
+  $("gBtn").onclick=function(){
+    var raw=$("gCode").value.trim();
+    if(raw.replace(/[^A-Za-z0-9]/g,"").length<5){ toast("입장 코드를 확인해 주세요"); return; }
+    var code=normCode(raw);
+    $("gBtn").disabled=true;
+    codeOk(code).then(function(ok){
+      $("gBtn").disabled=false;
+      if(!ok){ toast("등록되지 않은 코드예요"); return; }
+      S.code=code; save(); boot();
+    }, function(){ $("gBtn").disabled=false; toast("이 브라우저에서는 확인할 수 없어요"); });
+  };
+  function boot(){
+    showBanner();
+    if(!S.code){ showGate(false); return; }
+    codeOk(S.code).then(function(ok){ if(ok) enter(); else showGate(true); }, function(){ showGate(false); });
+  }
+  function enter(){
+    $("gate").classList.add("hidden");
+    if(!S.profile){
+      setupDays=[]; dayPicker("sDays", setupDays);
+      $("setup").classList.remove("hidden"); $("tabs").classList.add("hidden");
+      ["today","week","set"].forEach(function(t){ $("tab-"+t).classList.add("hidden"); });
+      return;
+    }
+    $("setup").classList.add("hidden"); $("tabs").classList.remove("hidden");
+    $("who").textContent = S.profile.name+" · "+REC[S.profile.grade].n+" · 1등급 과학전문학원";
+    show(curTab);
+  }
+
+  // ---------- 처음 설정 ----------
+  $("startBtn").onclick=function(){
+    var name=$("sName").value.trim();
+    if(!name){ $("sName").focus(); toast("이름을 입력해 주세요"); return; }
+    var g=$("sGrade").value;
+    S.profile={name:name, grade:g, cls:$("sClass").value, goal:REC[g].goal, sci:REC[g].sci, days:setupDays.slice()};
+    save(); boot();
+  };
+
+  // ---------- 오늘: 스톱워치 ----------
+  var selSubj = (S.running && S.running.subj) || "math";
+  function renderChips(){
+    var box=$("subjChips"); box.innerHTML="";
+    TIMER_SUBJ.forEach(function(k){
+      var b=document.createElement("button"); b.className="chip"+(selSubj===k?" on":""); b.textContent=subj(k).n;
+      b.disabled = !!S.running && S.running.subj!==k;
+      b.onclick=function(){ if(S.running) return; selSubj=k; renderChips(); };
+      box.appendChild(b);
+    });
+  }
+  function elapsed(){ var r=S.running; if(!r) return 0; return r.acc + (r.startedAt? Date.now()-r.startedAt : 0); }
+  function renderTimer(){
+    var r=S.running, ms=elapsed();
+    $("timer").textContent=clock(ms);
+    $("btnStart").classList.toggle("hidden", !!(r && r.startedAt));
+    $("btnStart").textContent = r ? "다시 시작" : "시작";
+    $("btnPause").classList.toggle("hidden", !(r && r.startedAt));
+    $("btnSave").classList.toggle("hidden", !r);
+    $("discardRow").classList.toggle("hidden", !r);
+    $("timerSub").textContent = !r ? "과목을 고르고 시작을 누르세요" : (r.startedAt ? subj(r.subj).n+" 공부 중 · 휴대폰은 잠시 내려두세요" : subj(r.subj).n+" 일시정지됨");
+  }
+  setInterval(function(){ if(S.running && S.running.startedAt && curTab==="today") $("timer").textContent=clock(elapsed()); }, 500);
+
+  $("btnStart").onclick=function(){
+    if(!S.running) S.running={subj:selSubj, acc:0, startedAt:Date.now(), day:today()};
+    else if(!S.running.startedAt) S.running.startedAt=Date.now();
+    save(); renderChips(); renderTimer();
+  };
+  $("btnPause").onclick=function(){
+    var r=S.running; if(!r||!r.startedAt) return;
+    r.acc += Date.now()-r.startedAt; r.startedAt=null; save(); renderTimer();
+  };
+  $("btnSave").onclick=function(){
+    var r=S.running; if(!r) return;
+    var min=Math.round(elapsed()/60000);
+    if(min<1){ toast("1분 이상부터 저장돼요"); return; }
+    if(min>240){
+      openModal('<h3>공부 시간이 '+hm(min)+'으로 기록됐어요</h3><p class="muted small">스톱워치 끄는 걸 깜빡했다면 실제 순공시간(분)으로 고쳐 주세요.</p>'+
+        '<input id="fixMin" type="number" inputmode="numeric" min="1" max="720" value="'+min+'"><div class="row" style="margin-top:12px"><button class="btn ghost" id="mCancel">취소</button><button class="btn primary" id="mOk">저장</button></div>');
+      $("mCancel").onclick=closeModal;
+      $("mOk").onclick=function(){ var v=Math.round(+$("fixMin").value); if(!(v>=1&&v<=720)){ toast("1~720분 사이로 입력해 주세요"); return; } closeModal(); finishRun(v); };
+      return;
+    }
+    finishRun(min);
+  };
+  function finishRun(min){
+    var r=S.running;
+    addSession(r.day||today(), r.subj, min);
+    S.running=null; save(); toast(subj(r.subj).n+" "+hm(min)+" 저장했어요");
+    renderToday();
+  }
+  $("btnDiscard").onclick=function(){
+    openModal('<h3>이번 스톱워치 기록을 버릴까요?</h3><p class="muted small">'+clock(elapsed())+' 동안 잰 시간이 저장되지 않아요.</p><div class="row" style="margin-top:12px"><button class="btn ghost" id="mCancel">취소</button><button class="btn danger" id="mOk">버리기</button></div>');
+    $("mCancel").onclick=closeModal;
+    $("mOk").onclick=function(){ S.running=null; save(); closeModal(); renderToday(); };
+  };
+
+  function addSession(date, k, min){
+    S.sessions.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6), date:date, subj:k, min:min, t:Date.now()});
+  }
+
+  // 학원 순공
+  $("btnAcad").onclick=function(){
+    var m=ACAD_MIN[S.profile.cls]||90;
+    var already=S.sessions.some(function(s){ return s.date===today() && s.subj==="acad"; });
+    openModal('<h3>오늘 학원 순공 '+m+'분을 기록할까요?</h3><p class="muted small">개념수업 뒤 학원 순공시간(개념정리·문제풀이·오답확인)이 과학 순공으로 들어가요.'+(already?'<br><b style="color:#C94B4B">오늘 이미 학원 순공이 기록돼 있어요.</b>':'')+'</p>'+
+      '<div class="row" style="margin-top:12px"><button class="btn ghost" id="mCancel">취소</button><button class="btn primary" id="mOk">기록</button></div>');
+    $("mCancel").onclick=closeModal;
+    $("mOk").onclick=function(){ addSession(today(),"acad",m); save(); closeModal(); toast("학원 순공 "+m+"분 기록 완료"); renderToday(); };
+  };
+
+  // 직접 입력
+  $("btnManual").onclick=function(){
+    var opts=SUBJ.map(function(s){ return '<option value="'+s.k+'">'+s.n+'</option>'; }).join("");
+    var dOpts=""; for(var i=0;i<7;i++){ var d=addDays(new Date(),-i); dOpts+='<option value="'+ymd(d)+'">'+(i===0?"오늘":i===1?"어제":md(d))+' ('+DOW[(d.getDay()+6)%7]+')</option>'; }
+    openModal('<h3>순공시간 직접 입력</h3>'+
+      '<div class="grid2"><div><label class="f">날짜</label><select id="mDate">'+dOpts+'</select></div><div><label class="f">과목</label><select id="mSubj">'+opts+'</select></div></div>'+
+      '<label class="f">시간 (분)</label><div class="stepper"><button id="mMinus">−</button><input id="mMin" type="number" inputmode="numeric" value="30" min="5" max="720"><button id="mPlus">+</button></div>'+
+      '<div class="row" style="margin-top:14px"><button class="btn ghost" id="mCancel">취소</button><button class="btn primary" id="mOk">추가</button></div>');
+    $("mSubj").value=selSubj;
+    $("mMinus").onclick=function(){ $("mMin").value=Math.max(5,(+$("mMin").value||0)-10); };
+    $("mPlus").onclick=function(){ $("mMin").value=Math.min(720,(+$("mMin").value||0)+10); };
+    $("mCancel").onclick=closeModal;
+    $("mOk").onclick=function(){
+      var v=Math.round(+$("mMin").value);
+      if(!(v>=1&&v<=720)){ toast("1~720분 사이로 입력해 주세요"); return; }
+      addSession($("mDate").value,$("mSubj").value,v); save(); closeModal(); toast("추가했어요"); renderToday();
+    };
+  };
+
+  function pendingAcad(){
+    // 오늘, 어제 중 학원 요일인데 기록도 '안 했어요'도 없는 날
+    var days=(S.profile&&S.profile.days)||[], out=[];
+    if(!days.length) return out;
+    S.acadSkip=S.acadSkip||{};
+    for(var i=1;i>=0;i--){
+      var d=addDays(new Date(),-i), key=ymd(d);
+      if(days.indexOf(dowIdx(d))<0) continue;
+      if(S.acadSkip[key]) continue;
+      if(S.sessions.some(function(s){return s.date===key && s.subj==="acad";})) continue;
+      out.push({date:key, label:i===1?"어제":"오늘", d:d});
+    }
+    return out;
+  }
+  function renderPrompt(){
+    var box=$("acadPrompt"), list=pendingAcad(); box.innerHTML="";
+    if(!list.length) return;
+    var p=list[0], m=ACAD_MIN[S.profile.cls]||90;
+    var el=document.createElement("div"); el.className="prompt";
+    el.innerHTML='<div class="pt">'+p.label+'('+DOW[dowIdx(p.d)]+')'+(p.label==="어제"?"는":"은")+' 학원 오는 날이에요</div>'+
+      '<div class="pd">'+(p.label==="오늘"?"수업이 끝났다면 ":"")+'학원 순공 '+m+'분을 기록할까요?</div>'+
+      '<div class="row"><button class="btn ghost" data-a="skip">'+(p.label==="오늘"?"오늘은 안 했어요":"안 했어요")+'</button><button class="btn gold" data-a="ok">기록하기</button></div>';
+    el.querySelector('[data-a=ok]').onclick=function(){ addSession(p.date,"acad",m); save(); toast(p.label+" 학원 순공 "+m+"분 기록 완료"); renderToday(); };
+    el.querySelector('[data-a=skip]').onclick=function(){ S.acadSkip=S.acadSkip||{}; S.acadSkip[p.date]=1; save(); renderToday(); };
+    box.appendChild(el);
+  }
+  function renderToday(){
+    renderPrompt();
+    var t=new Date();
+    $("todayLabel").textContent=md(t)+" ("+DOW[(t.getDay()+6)%7]+")";
+    $("acadDesc").textContent = S.profile.cls==="1" ? "학원 오는 날, 과학 순공 90분이 채워져요" : "학원 오는 날마다 과학 순공 50분이 채워져요";
+    renderChips(); renderTimer();
+    // 오늘 목록
+    var td=today(), list=S.sessions.filter(function(s){return s.date===td;}).sort(function(a,b){return a.t-b.t;});
+    var ul=$("todayList"); ul.innerHTML="";
+    var tot=0;
+    if(!list.length) ul.innerHTML='<li class="empty" style="display:block">아직 오늘 기록이 없어요</li>';
+    list.forEach(function(s){
+      tot+=s.min; var sj=subj(s.subj);
+      var li=document.createElement("li");
+      li.innerHTML='<span class="dot" style="background:'+sj.c+'"></span><span class="nm">'+sj.n+'</span><span class="mn">'+hm(s.min)+'</span>';
+      var x=document.createElement("button"); x.className="x"; x.setAttribute("aria-label","삭제"); x.textContent="×";
+      x.onclick=function(){
+        openModal('<h3>'+sj.n+' '+hm(s.min)+' 기록을 지울까요?</h3><div class="row" style="margin-top:12px"><button class="btn ghost" id="mCancel">취소</button><button class="btn danger" id="mOk">지우기</button></div>');
+        $("mCancel").onclick=closeModal;
+        $("mOk").onclick=function(){ S.sessions=S.sessions.filter(function(z){return z.id!==s.id;}); save(); closeModal(); renderToday(); };
+      };
+      li.appendChild(x); ul.appendChild(li);
+    });
+    $("todayTotal").textContent=hm(tot);
+    // 주간 목표
+    var mon=monday(new Date()), w=weekData(mon);
+    $("weekRange0").textContent=md(mon)+" ~ "+md(addDays(mon,6));
+    setGoal("gTot","gTotGoal","gTotBar",w.tot,S.profile.goal);
+    setGoal("gSci","gSciGoal","gSciBar",w.sci,S.profile.sci);
+  }
+  function setGoal(vId,gId,bId,min,goalH){
+    $(vId).textContent=hr(min); $(gId).textContent=goalH;
+    var pct=goalH? Math.min(100, min/60/goalH*100):0; $(bId).style.width=pct+"%";
+    $(bId).style.background = pct>=100 ? "var(--gold)" : "";
+    return goalH? Math.round(min/60/goalH*100):0;
+  }
+
+  // ---------- 주간 ----------
+  $("prevW").onclick=function(){ viewMon=addDays(viewMon,-7); renderWeek(); };
+  $("nextW").onclick=function(){ viewMon=addDays(viewMon,7); renderWeek(); };
+  function renderWeek(){
+    var w=weekData(viewMon), thisMon=monday(new Date());
+    var diff=Math.round((viewMon-thisMon)/(7*86400000));
+    $("weekTitle").textContent = diff===0?"이번 주":diff===-1?"지난주":diff===1?"다음 주":(diff<0? (-diff)+"주 전": diff+"주 후");
+    $("weekRange").textContent = md(viewMon)+" ~ "+md(addDays(viewMon,6));
+    $("nextW").disabled = diff>=0; $("nextW").style.opacity = diff>=0? .35:1;
+    $("weekSum").textContent="합계 "+hr(w.tot)+"시간";
+    // 막대
+    var max=Math.max.apply(null, w.days.map(function(d){return d.tot;}).concat([180]));
+    var bars=$("dayBars"); bars.innerHTML="";
+    var td=today(), labs="";
+    w.days.forEach(function(d,i){
+      var col=document.createElement("div"); col.className="day";
+      var v=document.createElement("div"); v.className="v"; v.textContent=d.tot? hr(d.tot):"";
+      var st=document.createElement("div"); st.className="stack"; st.style.height=Math.max(3, d.tot/max*120)+"px";
+      SUBJ.forEach(function(s){ var m=d.by[s.k]; if(m){ var sp=document.createElement("span"); sp.style.background=s.c; sp.style.height=(m/d.tot*100)+"%"; st.appendChild(sp);} });
+      col.appendChild(v); col.appendChild(st); bars.appendChild(col);
+      labs+='<div class="'+(d.date===td?"today":"")+'">'+DOW[i]+'</div>';
+    });
+    $("dayLabels").innerHTML=labs;
+    $("legend").innerHTML=SUBJ.map(function(s){return '<span><i class="dot" style="background:'+s.c+'"></i>'+s.n+'</span>';}).join("");
+    // 목표
+    var p1=setGoal("wTot","wTotGoal","wTotBar",w.tot,S.profile.goal);
+    var p2=setGoal("wSci","wSciGoal","wSciBar",w.sci,S.profile.sci);
+    $("wTotPct").textContent=p1+"%"; $("wSciPct").textContent=p2+"%";
+    // 표
+    var h='<thead><tr><th>요일</th>'+SUBJ.map(function(s){return '<th>'+s.n.replace("과학(학원 순공)","학원순공").replace("과학(집)","과학")+'</th>';}).join("")+'<th>합계</th></tr></thead><tbody>';
+    w.days.forEach(function(d,i){
+      h+='<tr><td>'+DOW[i]+' <span class="muted small">'+md(parseYmd(d.date))+'</span></td>'+SUBJ.map(function(s){var m=d.by[s.k]; return '<td>'+(m?hr(m):'<span class="muted">-</span>')+'</td>';}).join("")+'<td><b>'+(d.tot?hr(d.tot):'-')+'</b></td></tr>';
+    });
+    h+='</tbody><tfoot><tr><td>합계</td>'+SUBJ.map(function(s){return '<td>'+hr(w.by[s.k]||0)+'</td>';}).join("")+'<td>'+hr(w.tot)+'</td></tr></tfoot>';
+    $("weekTable").innerHTML=h;
+    $("reportText").textContent=report(w,p1,p2);
+  }
+  function report(w,p1,p2){
+    var P=S.profile, sun=addDays(w.mon,6);
+    var lines=[];
+    lines.push("[1등급 과학] "+P.name+" ("+REC[P.grade].n+") 순공 리포트");
+    lines.push(md(w.mon)+"(월) ~ "+md(sun)+"(일)");
+    lines.push("");
+    lines.push("■ 전체 순공 "+hr(w.tot)+"시간 / 목표 "+P.goal+"시간 ("+p1+"%)");
+    lines.push("■ 과학 순공 "+hr(w.sci)+"시간 / 목표 "+P.sci+"시간 ("+p2+"%)");
+    lines.push("   └ 집 "+hr(w.by.sci||0)+"시간 + 학원 순공 "+hr(w.by.acad||0)+"시간");
+    lines.push("");
+    lines.push("과목별: "+["kor","math","eng","etc"].map(function(k){return subj(k).n+" "+hr(w.by[k]||0);}).join(" · "));
+    lines.push("요일별: "+w.days.map(function(d,i){return DOW[i]+" "+hr(d.tot);}).join(" · "));
+    var studied=w.days.filter(function(d){return d.tot>0;}).length;
+    lines.push("공부한 날: 7일 중 "+studied+"일");
+    return lines.join("\n");
+  }
+  $("btnCopyReport").onclick=function(){ copyText($("reportText").textContent, "복사했어요! 카톡에 붙여넣으세요"); };
+
+  // ---------- 설정 ----------
+  function renderSet(){
+    var P=S.profile;
+    $("pName").value=P.name; $("pGrade").value=P.grade; $("pClass").value=P.cls; $("pGoal").value=P.goal; $("pSci").value=P.sci;
+    profDays=(P.days||[]).slice(); dayPicker("pDays", profDays);
+    markGuide(P.grade);
+  }
+  function markGuide(g){ Array.prototype.forEach.call(document.querySelectorAll("#guideTable tbody tr"), function(tr){ tr.classList.toggle("me", tr.dataset.g===g); }); }
+  $("pGrade").onchange=function(){ var r=REC[$("pGrade").value]; $("pGoal").value=r.goal; $("pSci").value=r.sci; markGuide($("pGrade").value); };
+  $("btnSaveProfile").onclick=function(){
+    var name=$("pName").value.trim(), goal=+$("pGoal").value, sci=+$("pSci").value;
+    if(!name){ toast("이름을 입력해 주세요"); return; }
+    if(!(goal>0&&goal<=100)){ toast("주간 목표를 확인해 주세요"); return; }
+    if(!(sci>0&&sci<=40)){ toast("과학 목표를 확인해 주세요"); return; }
+    S.profile={name:name, grade:$("pGrade").value, cls:$("pClass").value, goal:goal, sci:sci, days:profDays.slice()};
+    save(); $("who").textContent=name+" · "+REC[S.profile.grade].n+" · 1등급 과학전문학원"; toast("저장했어요");
+  };
+  $("btnBackup").onclick=function(){
+    var code="SG1:"+btoa(unescape(encodeURIComponent(JSON.stringify({profile:S.profile, sessions:S.sessions}))));
+    copyText(code,"백업 코드를 복사했어요");
+  };
+  $("btnRestore").onclick=function(){
+    var v=$("restoreText").value.trim();
+    try{
+      if(v.indexOf("SG1:")!==0) throw 0;
+      var obj=JSON.parse(decodeURIComponent(escape(atob(v.slice(4)))));
+      if(!obj.profile||!Array.isArray(obj.sessions)) throw 0;
+      openModal('<h3>백업으로 복원할까요?</h3><p class="muted small">'+esc(obj.profile.name)+' · 기록 '+obj.sessions.length+'개. 지금 이 휴대폰의 기록은 백업 내용으로 바뀌어요.</p><div class="row" style="margin-top:12px"><button class="btn ghost" id="mCancel">취소</button><button class="btn primary" id="mOk">복원</button></div>');
+      $("mCancel").onclick=closeModal;
+      $("mOk").onclick=function(){ S={profile:obj.profile, sessions:obj.sessions, running:null, code:S.code}; save(); closeModal(); $("restoreText").value=""; toast("복원했어요"); boot(); };
+    }catch(e){ toast("백업 코드가 올바르지 않아요"); }
+  };
+  $("btnReset").onclick=function(){
+    openModal('<h3>모든 기록을 지울까요?</h3><p class="muted small">이름, 목표, 순공 기록이 모두 사라지고 되돌릴 수 없어요. 필요하면 먼저 백업 코드를 복사해 두세요.</p><div class="row" style="margin-top:12px"><button class="btn ghost" id="mCancel">취소</button><button class="btn danger" id="mOk">모두 지우기</button></div>');
+    $("mCancel").onclick=closeModal;
+    $("mOk").onclick=function(){ S={profile:null, sessions:[], running:null, code:S.code}; save(); closeModal(); curTab="today"; boot(); };
+  };
+
+  boot();
+})();
+</script>
+</body>
+</html>
