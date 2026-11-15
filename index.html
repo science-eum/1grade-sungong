@@ -115,6 +115,11 @@
   .guide th,.guide td{padding:8px 10px;text-align:center}
   .guide th:first-child,.guide td:first-child{text-align:left}
   .guide tr.me td{background:var(--gold-soft);font-weight:700}
+  .guide + .guide{margin-top:12px}
+  .gt{font-size:12.5px}
+  .gt th,.gt td{padding:7px 6px!important;text-align:center!important;border-bottom:1px solid var(--line);vertical-align:middle}
+  .gt td:first-child{text-align:left!important}
+  .gt td[rowspan]{background:#FAFAFC;font-weight:700}
   .guide .gn{padding:9px 12px;font-size:12px;color:var(--muted);border-top:1px solid var(--line);line-height:1.6}
   .daypick{display:flex;gap:6px}
   .daypick .chip{flex:1;padding:8px 0;text-align:center;border-radius:10px}
@@ -171,9 +176,9 @@
         <div>
           <label class="f" for="sClass">학원 수업</label>
           <select id="sClass">
-            <option value="1">주 1회 (학원 순공 90분)</option>
-            <option value="2">주 2회 (학원 순공 50분×2)</option>
-            <option value="3">주 3회 (학원 순공 50분×3)</option>
+            <option value="1">주 1회 (90분)</option>
+            <option value="2">주 2회 (50분×2)</option>
+            <option value="3">주 3회 (50분×3)</option>
           </select>
         </div>
       </div>
@@ -283,9 +288,9 @@
         <div>
           <label class="f" for="pClass">학원 수업</label>
           <select id="pClass">
-            <option value="1">주 1회 (학원 순공 90분)</option>
-            <option value="2">주 2회 (학원 순공 50분×2)</option>
-            <option value="3">주 3회 (학원 순공 50분×3)</option>
+            <option value="1">주 1회 (90분)</option>
+            <option value="2">주 2회 (50분×2)</option>
+            <option value="3">주 3회 (50분×3)</option>
           </select>
         </div>
       </div>
@@ -306,19 +311,53 @@
     </div>
     <div class="card">
       <h2>학년별 순공시간 가이드</h2>
+      <p class="muted small" style="margin:0 0 10px">순공은 학교·학원 수업을 뺀, 혼자 공부한 시간이에요. 내 학년 줄이 노란색으로 표시돼요.</p>
       <div class="guide" style="margin-top:0">
-        <div class="gh">일주일 기준 · 목표를 정할 때 참고하세요</div>
-        <table id="guideTable">
-          <thead><tr><th>학년</th><th>전체 순공<br><span class="small">중위권 → 상위권</span></th><th>과학 순공</th></tr></thead>
+        <div class="gh">학기 중</div>
+        <table id="guideTable" class="gt">
+          <thead><tr><th>시기</th><th>구분</th><th>평일<br><span class="small">하루</span></th><th>주말<br><span class="small">하루</span></th><th>주당</th></tr></thead>
           <tbody>
-            <tr data-g="ms"><td>중학생</td><td>12 → 18시간</td><td>2~3시간</td></tr>
-            <tr data-g="m3"><td>중3 (예비 고1)</td><td>15 → 25시간</td><td>2.5~3시간</td></tr>
-            <tr data-g="h1"><td>고1</td><td>20 → 30시간</td><td>3.5~4시간</td></tr>
-            <tr data-g="h2"><td>고2</td><td>25 → 35시간</td><td>4.5~5시간</td></tr>
-            <tr data-g="h3"><td>고3</td><td>30 → 45~55시간</td><td>4.5~10시간</td></tr>
+            <tr class="g-m3"><td rowspan="2">중3<br><span class="small">기말 이후</span></td><td>중위권</td><td>1.5~2</td><td>4~5</td><td>약 15</td></tr>
+            <tr class="g-m3"><td>상위권</td><td>2.5~3</td><td>6~7</td><td>약 25</td></tr>
+            <tr class="g-h1"><td rowspan="2">고1</td><td>중위권</td><td>2</td><td>5~6</td><td>약 20</td></tr>
+            <tr class="g-h1"><td>상위권</td><td>3</td><td>7~8</td><td>약 30</td></tr>
+            <tr class="g-h2"><td rowspan="2">고2</td><td>중위권</td><td>2.5~3</td><td>6~7</td><td>약 25</td></tr>
+            <tr class="g-h2"><td>상위권</td><td>3.5~4</td><td>8~9</td><td>약 35</td></tr>
+            <tr class="g-h3"><td rowspan="2">고3</td><td>수시 위주</td><td>3~4</td><td>7~8</td><td>30~35</td></tr>
+            <tr class="g-h3"><td>정시·상위권</td><td>5~6</td><td>10~12</td><td>45~55</td></tr>
           </tbody>
         </table>
-        <div class="gn">· 시험 3주 전에는 위 시간보다 하루 1~2시간 더<br>· 방학에는 전체 순공 하루 5~6시간(중위권) ~ 7~9시간(상위권)<br>· 고3 과학은 수시 위주 4.5~5시간, 정시(과탐 2과목) 8~10시간<br>· 과학 순공에는 학원 순공시간(주 1회 1.5시간)이 포함돼요</div>
+        <div class="gn">· 단위: 시간<br>· 고1·고2 시험 3주 전에는 평일을 1~2시간 더 늘려요<br>· 고3 평일에는 야간자율학습 시간이 포함돼요<br>· 중학생은 주당 12시간(과학 2시간)부터 시작해요</div>
+      </div>
+      <div class="guide">
+        <div class="gh">방학 중 (하루 기준)</div>
+        <table class="gt">
+          <thead><tr><th>시기</th><th>중위권</th><th>상위권</th></tr></thead>
+          <tbody>
+            <tr class="g-m3"><td>중3 겨울방학 (예비 고1)</td><td>5~6</td><td>7~8</td></tr>
+            <tr class="g-h1 g-h2"><td>고1·고2 여름/겨울방학</td><td>5~6</td><td>7~9</td></tr>
+            <tr class="g-h2"><td>고2 겨울방학 (예비 고3)</td><td>7~8</td><td>9~11</td></tr>
+            <tr class="g-h3"><td>고3 여름방학</td><td>8~9</td><td>10~12</td></tr>
+          </tbody>
+        </table>
+        <div class="gn">· 단위: 시간<br>· 학원을 하루 3~4시간 다니면 방학 순공은 5~6시간이 현실적인 상한이에요<br>· 방학 첫 1~2주는 4~5시간에서 시작해 점점 늘려요</div>
+      </div>
+      <div class="guide">
+        <div class="gh">일주일 과학 순공 (주 1회 수강 기준)</div>
+        <table class="gt">
+          <thead><tr><th>시기</th><th>주당 과학</th><th>학원</th><th>집에서</th></tr></thead>
+          <tbody>
+            <tr class="g-m3"><td>중3 기말고사 이후</td><td>2~3</td><td>1.5</td><td>0.5~1.5</td></tr>
+            <tr class="g-m3"><td>중3 겨울방학</td><td>4~5</td><td>1.5</td><td>2.5~3.5</td></tr>
+            <tr class="g-h1"><td>고1 학기 중</td><td>3~4</td><td>1.5</td><td>1.5~2.5</td></tr>
+            <tr class="g-h1 g-h2"><td>고1·고2 시험 3주 전</td><td>5~6</td><td>1.5</td><td>3.5~4.5</td></tr>
+            <tr class="g-h2"><td>고2 학기 중</td><td>4~5</td><td>1.5</td><td>2.5~3.5</td></tr>
+            <tr class="g-h1 g-h2"><td>고1·고2 방학</td><td>5~7</td><td>1.5</td><td>3.5~5.5</td></tr>
+            <tr class="g-h3"><td>고3 수시 위주</td><td>4~5</td><td>1.5</td><td>2.5~3.5</td></tr>
+            <tr class="g-h3"><td>고3 정시 (과탐 2과목)</td><td>8~10</td><td>1.5</td><td>6.5~8.5</td></tr>
+          </tbody>
+        </table>
+        <div class="gn">· 단위: 시간<br>· 주 2회 반은 학원에서 1시간 40분, 주 3회 반은 2시간 30분이 채워져요</div>
       </div>
     </div>
     <div class="card">
@@ -738,7 +777,7 @@
     profDays=(P.days||[]).slice(); dayPicker("pDays", profDays);
     markGuide(P.grade);
   }
-  function markGuide(g){ Array.prototype.forEach.call(document.querySelectorAll("#guideTable tbody tr"), function(tr){ tr.classList.toggle("me", tr.dataset.g===g); }); }
+  function markGuide(g){ Array.prototype.forEach.call(document.querySelectorAll(".gt tbody tr"), function(tr){ tr.classList.toggle("me", tr.classList.contains("g-"+g)); }); }
   $("pGrade").onchange=function(){ var r=REC[$("pGrade").value]; $("pGoal").value=r.goal; $("pSci").value=r.sci; markGuide($("pGrade").value); };
   $("btnSaveProfile").onclick=function(){
     var name=$("pName").value.trim(), goal=+$("pGoal").value, sci=+$("pSci").value;
